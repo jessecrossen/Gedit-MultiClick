@@ -77,7 +77,7 @@ class MultiClick(GObject.Object, Gedit.ViewActivatable):
         last_offset = start_iter.get_offset()
         tries = 0
         while(True):
-          if (start_iter.is_start()):
+          if ((start_iter.is_start()) or (start_iter.starts_line())):
             start_iter.set_offset(last_offset)
             go_back = False
             break
@@ -93,7 +93,7 @@ class MultiClick(GObject.Object, Gedit.ViewActivatable):
         last_offset = end_iter.get_offset()
         tries = 0
         while(True):
-          if (end_iter.is_end()):
+          if ((end_iter.is_end()) or (end_iter.ends_line())):
             end_iter.set_offset(last_offset)
             go_forward = False
             break
