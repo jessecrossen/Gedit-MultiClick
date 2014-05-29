@@ -1,6 +1,7 @@
 from gi.repository import GObject, Gtk, Gdk, Gedit
 
 import re
+import time
 
 class MultiClick(GObject.Object, Gedit.ViewActivatable):
   __gtype_name__ = "MultiClick"
@@ -9,12 +10,14 @@ class MultiClick(GObject.Object, Gedit.ViewActivatable):
   def __init__(self):
     GObject.Object.__init__(self)
     self._handler_id = None
+    self._click_count = 0
+    self._last_click_time = 0
   
   # hook and unhook from view events
   def do_activate(self):
     # compile regexes to use for matching
-    self.match_word = re.compile('^(\\w+|\\w[\\w-]*\\w)$')
-    self.match_chain = re.compile('^\\w+[\\w-]*?((->|::|@|\\.|[/:.]+|[\\\\.:]+)[\\w-]*\\w+)*$')
+    self.match_word = re.compile('^(#?\\w+|\\w[\\w-]*\\w)$')
+    self.match_chain = re.compile('^#?\\w+[\\w-]*?((->|::|@|\\.|[/:.?&=%+#]+|[\\\\.:]+)[\\w-]*\\w+)*$')
     # retain a reference to the document
     self.doc = self.view.get_buffer()
     # bind events
@@ -25,11 +28,28 @@ class MultiClick(GObject.Object, Gedit.ViewActivatable):
       self._handler_id = None
       
   def on_event(self, view, event):
+    # count clicks
+    if (event.type == Gdk.EventType.BUTTON_PRESS):
+      current_time = time.time()
+      if (current_time - self._last_click_time > 0.25):
+        self._click_count = 1
+      else:
+        self._click_count += 1
+      self._last_click_time = current_time
+      # handle any number of clicks after the first
+      if (self._click_count > 1):
+        if (self._click_count == 2):
+          self.select_word()
+        elif (self._click_count == 3):
+          self.select_chain()
+        elif (self._click_count == 4):
+          self.select_line()
+        return(True)
+    # swallow gedit's multiple-click events because they're 
+    #  being handled above
     if (event.type == Gdk.EventType._2BUTTON_PRESS):
-      self.select_word()
       return(True)
     elif (event.type == Gdk.EventType._3BUTTON_PRESS):
-      self.select_chain()
       return(True)
     return(False)
   
@@ -94,5 +114,11 @@ class MultiClick(GObject.Object, Gedit.ViewActivatable):
   def select_chain(self):
     (start_iter, end_iter) = self.get_selection_iters()
     self.expand_iters(start_iter, end_iter, self.is_chain, 5)
+    self.doc.select_range(start_iter, end_iter)
+
+  def select_line(self):
+    (start_iter, end_iter) = self.get_selection_iters()
+    start_iter.set_line_offset(0)
+    end_iter.forward_to_line_end()
     self.doc.select_range(start_iter, end_iter)
     
