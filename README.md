@@ -32,4 +32,4 @@ Then re-run install.sh and try again from there.
 Usage
 =====
 
-Double-click a keyword to select it. A keyword is defined as any contiguous run of alphanumeric characters and underscores, potentially containing internal dashes as well to support CSS class names and such. Triple clicking will select a chain of keywords, defined as any contiguous run of keywords separated by the common operators "->", "::", and "." as well as forward and backward slashes for paths and "@" for emails. I didn't put a whole lot of thought into these definitions, so feel free to suggest improvements.
+Double-click a keyword to select it. A keyword is defined as any contiguous run of alphanumeric characters and underscores, potentially containing internal dashes as well to support CSS class names and such. Triple clicking will select a chain of keywords, defined as any contiguous run of keywords separated by the common operators "->", "::", and "." as well as forward and backward slashes for paths and "@" for emails. I didn't put a whole lot of thought into these definitions, so feel free to suggest improvements. Good matching of URLs would be handy, for instance.

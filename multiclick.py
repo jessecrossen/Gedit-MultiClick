@@ -14,7 +14,7 @@ class MultiClick(GObject.Object, Gedit.ViewActivatable):
   def do_activate(self):
     # compile regexes to use for matching
     self.match_word = re.compile('^(\\w+|\\w[\\w-]*\\w)$')
-    self.match_chain = re.compile('^\\w+[\\w-]*?((->|::|\\.)[\\w-]*\\w+)*$')
+    self.match_chain = re.compile('^\\w+[\\w-]*?((->|::|@|\\.|[/:.]+|[\\\\.:]+)[\\w-]*\\w+)*$')
     # retain a reference to the document
     self.doc = self.view.get_buffer()
     # bind events
@@ -93,6 +93,6 @@ class MultiClick(GObject.Object, Gedit.ViewActivatable):
     
   def select_chain(self):
     (start_iter, end_iter) = self.get_selection_iters()
-    self.expand_iters(start_iter, end_iter, self.is_chain, 3)
+    self.expand_iters(start_iter, end_iter, self.is_chain, 5)
     self.doc.select_range(start_iter, end_iter)
     
