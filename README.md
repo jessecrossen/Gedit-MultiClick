@@ -32,7 +32,7 @@ Then re-run install.sh and try again from there.
 Usage
 =====
 
-* **Double-click** a keyword to select it. A keyword is defined as any contiguous run of alphanumeric characters and underscores, potentially containing internal dashes as well to support CSS class names and such, and potentially beginning with # to support color references.
+* **Double-click** a keyword to select it. A keyword is defined as any contiguous run of alphanumeric characters and underscores, potentially containing internal dashes as well to support CSS class names and such, and potentially beginning with $ or # to support PHP variables and color references respectively.
 
 * **Triple-click** to select a chain of keywords, defined as any contiguous run of keywords separated by the common operators "->", "::", and "." as well as separators for Windows and POSIX style paths, "@" for emails, and a handful of common URI separators to match URIs.
 
